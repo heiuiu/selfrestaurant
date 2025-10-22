@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self Restaurant - Quầy Tự Phục Vụ</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <!-- Menu Bar -->
+    <nav class="menu-bar">
+        <div class="menu-content">
+            <a href="index.html" class="logo">
+                🍽️ Self Restaurant
+            </a>
+            <div class="menu-nav">
+                <a href="index.html" class="active">Trang Chủ</a>
+                <a href="order.html">Đặt Món</a>
+                <a href="payment.html">Thanh Toán</a>
+                <a href="demo.html">Demo</a>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Chuyển đổi chế độ sáng/tối">
+                <span id="theme-icon">🌙</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="nav-buttons">
+            <a href="order.html" class="nav-btn">
+                📱 Đặt Món Tại Bàn
+            </a>
+            <a href="payment.html" class="nav-btn secondary">
+                💰 Thanh Toán Tại Quầy
+            </a>
+        </div>
+
+        <div class="card">
+            <h2 style="text-align: center; margin-bottom: 30px; color: var(--text-primary);">
+                Chào mừng đến với Self Restaurant!
+            </h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 4rem; margin-bottom: 15px;">📱</div>
+                    <h3 style="color: var(--text-primary); margin-bottom: 15px;">Đặt Món Tại Bàn</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        Khách hàng có thể tự đặt món ngay tại bàn bằng màn hình cảm ứng. 
+                        Chọn món, nhập số bàn và nhận thông báo xác nhận.
+                    </p>
+                    <a href="order.html" class="btn btn-primary" style="margin-top: 20px;">
+                        Bắt Đầu Đặt Món
+                    </a>
+                </div>
+
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 4rem; margin-bottom: 15px;">💰</div>
+                    <h3 style="color: var(--text-primary); margin-bottom: 15px;">Thanh Toán Tại Quầy</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        Thu ngân xử lý thanh toán tiền mặt tại quầy. 
+                        Nhập mã bàn, kiểm tra đơn hàng và hoàn tất giao dịch.
+                    </p>
+                    <a href="payment.html" class="btn btn-primary" style="margin-top: 20px;">
+                        Truy Cập Quầy Thu Ngân
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="static/js/data-storage.js"></script>
+    <script src="static/js/main.js"></script>
+</body>
+</html>

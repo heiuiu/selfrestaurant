@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán Tại Quầy - Self Restaurant</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <!-- Menu Bar -->
+    <nav class="menu-bar">
+        <div class="menu-content">
+            <a href="index.html" class="logo">
+                🍽️ Self Restaurant
+            </a>
+            <div class="menu-nav">
+                <a href="index.html">Trang Chủ</a>
+                <a href="order.html">Đặt Món</a>
+                <a href="payment.html" class="active">Thanh Toán</a>
+                <a href="demo.html">Demo</a>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Chuyển đổi chế độ sáng/tối">
+                <span id="theme-icon">🌙</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Màn hình chính thanh toán -->
+        <div class="card">
+            <h2 style="text-align: center; margin-bottom: 30px; color: var(--text-primary);">
+                🧾 Xử Lý Thanh Toán
+            </h2>
+
+            <!-- Tìm kiếm đơn hàng -->
+            <div class="card" style="margin-bottom: 30px;">
+                <h3 style="margin-bottom: 20px; color: var(--text-primary);">🔍 Tìm Đơn Hàng</h3>
+                
+                <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px;">
+                    <input type="number" id="table-search" placeholder="Nhập số bàn..." 
+                           style="flex: 1; padding: 15px; border: 2px solid var(--border-color); border-radius: 10px; font-size: 1.2rem; background: var(--bg-primary); color: var(--text-primary);">
+                    <button class="btn btn-primary" onclick="searchOrder()">
+                        🔍 Tìm Kiếm
+                    </button>
+                </div>
+
+                <div id="search-result" style="display: none;">
+                    <!-- Search results will be displayed here -->
+                </div>
+            </div>
+
+            <!-- Thông tin đơn hàng và thanh toán -->
+            <div class="payment-section" id="payment-section" style="display: none;">
+                <!-- Thông tin đơn hàng -->
+                <div class="payment-info">
+                    <h3>📋 Chi Tiết Đơn Hàng</h3>
+                    <div class="order-details" id="order-details">
+                        <!-- Order details will be displayed here -->
+                    </div>
+                </div>
+
+                <!-- Điều khiển thanh toán -->
+                <div class="payment-controls">
+                    <h3>💵 Thanh Toán</h3>
+                    
+                    <!-- Chọn phương thức thanh toán -->
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-primary);">
+                            Phương thức thanh toán:
+                        </label>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px;">
+                            <label style="display: flex; align-items: center; padding: 10px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 8px; cursor: pointer; transition: all 0.3s ease;">
+                                <input type="radio" name="payment-method" value="cash" checked style="margin-right: 10px;">
+                                <span>💵 Tiền mặt</span>
+                            </label>
+                            <label style="display: flex; align-items: center; padding: 10px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 8px; cursor: pointer; transition: all 0.3s ease;">
+                                <input type="radio" name="payment-method" value="card" style="margin-right: 10px;">
+                                <span>💳 Thẻ</span>
+                            </label>
+                            <label style="display: flex; align-items: center; padding: 10px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 8px; cursor: pointer; transition: all 0.3s ease;">
+                                <input type="radio" name="payment-method" value="qr" style="margin-right: 10px;">
+                                <span>📱 QR Code</span>
+                            </label>
+                            <label style="display: flex; align-items: center; padding: 10px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 8px; cursor: pointer; transition: all 0.3s ease;">
+                                <input type="radio" name="payment-method" value="transfer" style="margin-right: 10px;">
+                                <span>🏦 Chuyển khoản</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Phần thanh toán tiền mặt -->
+                    <div id="cash-payment" class="payment-method-section">
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-primary);">
+                                Số tiền khách đưa:
+                            </label>
+                            <input type="number" id="amount-paid" class="amount-input" 
+                                   placeholder="Nhập số tiền..." oninput="calculateChange()">
+                        </div>
+
+                        <!-- Nút số tiền nhanh -->
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-primary);">
+                                Số tiền nhanh:
+                            </label>
+                            <div class="quick-amount-buttons">
+                                <button class="quick-amount-btn" onclick="setAmount(50000)">50,000 VNĐ</button>
+                                <button class="quick-amount-btn" onclick="setAmount(100000)">100,000 VNĐ</button>
+                                <button class="quick-amount-btn" onclick="setAmount(200000)">200,000 VNĐ</button>
+                                <button class="quick-amount-btn" onclick="setAmount(500000)">500,000 VNĐ</button>
+                            </div>
+                        </div>
+
+                        <!-- Hiển thị tiền thối -->
+                        <div class="change-display" id="change-display">
+                            Tiền thối: 0 VNĐ
+                        </div>
+                    </div>
+                    
+                    <!-- Phần thanh toán thẻ -->
+                    <div id="card-payment" class="payment-method-section" style="display: none;">
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-primary);">
+                                Số thẻ:
+                            </label>
+                            <input type="text" id="card-number" class="amount-input" placeholder="Nhập số thẻ..." maxlength="19">
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-primary);">
+                                Ngày hết hạn:
+                            </label>
+                            <input type="text" id="card-expiry" class="amount-input" placeholder="MM/YY" maxlength="5">
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-primary);">
+                                CVV:
+                            </label>
+                            <input type="text" id="card-cvv" class="amount-input" placeholder="CVV" maxlength="3">
+                        </div>
+                    </div>
+                    
+                    <!-- Phần thanh toán QR -->
+                    <div id="qr-payment" class="payment-method-section" style="display: none;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <div style="width: 200px; height: 200px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 10px; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 3rem;">
+                                📱
+                            </div>
+                            <p style="margin-top: 10px; color: var(--text-secondary);">Quét mã QR để thanh toán</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Phần chuyển khoản -->
+                    <div id="transfer-payment" class="payment-method-section" style="display: none;">
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-primary);">
+                                Số tài khoản:
+                            </label>
+                            <input type="text" id="account-number" class="amount-input" placeholder="Nhập số tài khoản...">
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-primary);">
+                                Ngân hàng:
+                            </label>
+                            <select id="bank-name" class="amount-input" style="background: var(--bg-primary); color: var(--text-primary);">
+                                <option value="">Chọn ngân hàng</option>
+                                <option value="vietcombank">Vietcombank</option>
+                                <option value="agribank">Agribank</option>
+                                <option value="bidv">BIDV</option>
+                                <option value="techcombank">Techcombank</option>
+                                <option value="mbbank">MB Bank</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Nút xác nhận thanh toán -->
+                    <button class="btn btn-primary" onclick="processPayment()" id="process-payment-btn" 
+                            style="width: 100%; font-size: 1.2rem; padding: 20px;">
+                        ✅ Xác Nhận Thanh Toán
+                    </button>
+                </div>
+            </div>
+
+            <!-- Thông báo kết quả -->
+            <div id="payment-result" class="card hidden">
+                <!-- Payment result will be displayed here -->
+            </div>
+        </div>
+
+        <!-- Hướng dẫn sử dụng -->
+        <div class="card">
+            <h3 style="text-align: center; margin-bottom: 20px; color: var(--text-primary);">
+                📖 Hướng Dẫn Sử Dụng
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <div style="padding: 20px; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 10px;">
+                    <h4 style="color: var(--text-primary); margin-bottom: 10px;">🔍 Bước 1: Tìm Đơn Hàng</h4>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        Nhập số bàn vào ô tìm kiếm và nhấn "Tìm Kiếm" để hiển thị đơn hàng của khách.
+                    </p>
+                </div>
+                
+                <div style="padding: 20px; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 10px;">
+                    <h4 style="color: var(--text-primary); margin-bottom: 10px;">💰 Bước 2: Nhập Số Tiền</h4>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        Nhập số tiền khách đưa hoặc sử dụng các nút số tiền nhanh. Hệ thống sẽ tự động tính tiền thối.
+                    </p>
+                </div>
+                
+                <div style="padding: 20px; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 10px;">
+                    <h4 style="color: var(--text-primary); margin-bottom: 10px;">✅ Bước 3: Xác Nhận</h4>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        Kiểm tra lại thông tin và nhấn "Xác Nhận Thanh Toán" để hoàn tất giao dịch.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/js/data-storage.js"></script>
+    <script src="static/js/main.js"></script>
+    <script src="static/js/payment.js"></script>
+</body>
+</html>

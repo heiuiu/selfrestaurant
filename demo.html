@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo - Self Restaurant</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <style>
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .demo-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .demo-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .demo-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        .demo-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+        .demo-btn.secondary {
+            background: var(--text-secondary);
+        }
+        .demo-btn.secondary:hover {
+            background: var(--text-primary);
+        }
+        .demo-btn.danger {
+            background: var(--danger-color);
+        }
+        .demo-btn.danger:hover {
+            background: #c82333;
+        }
+        .status {
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+        .status.success {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+        .status.info {
+            background: rgba(0, 123, 255, 0.1);
+            color: var(--accent-color);
+            border: 1px solid rgba(0, 123, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <nav class="menu-bar">
+        <div class="menu-content">
+            <a href="index.html" class="logo">
+                🍽️ Self Restaurant - Demo
+            </a>
+            <div class="menu-nav">
+                <a href="index.html">Trang Chủ</a>
+                <a href="order.html">Đặt Món</a>
+                <a href="payment.html">Thanh Toán</a>
+                <a href="demo.html" class="active">Demo</a>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Chuyển đổi chế độ sáng/tối">
+                <span id="theme-icon">🌙</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="demo-container">
+            <div class="demo-section">
+                <h2>🧪 Demo & Testing</h2>
+                <p>Trang này cho phép bạn kiểm tra và quản lý dữ liệu của ứng dụng.</p>
+                
+                <div id="status-display">
+                    <div class="status info">
+                        📊 Đang kiểm tra trạng thái dữ liệu...
+                    </div>
+                </div>
+
+                <div class="demo-buttons">
+                    <button class="demo-btn" onclick="checkDataStatus()">
+                        🔍 Kiểm Tra Dữ Liệu
+                    </button>
+                    <button class="demo-btn secondary" onclick="createSampleOrder()">
+                        📝 Tạo Đơn Hàng Mẫu
+                    </button>
+                    <button class="demo-btn secondary" onclick="viewOrders()">
+                        📋 Xem Đơn Hàng
+                    </button>
+                    <button class="demo-btn danger" onclick="clearAllData()">
+                        🗑️ Xóa Tất Cả Dữ Liệu
+                    </button>
+                </div>
+            </div>
+
+            <div class="demo-section">
+                <h3>📊 Thống Kê Dữ Liệu</h3>
+                <div id="data-stats">
+                    <!-- Stats will be displayed here -->
+                </div>
+            </div>
+
+            <div class="demo-section">
+                <h3>🔧 Chức Năng Khác</h3>
+                <div class="demo-buttons">
+                    <button class="demo-btn" onclick="exportData()">
+                        💾 Xuất Dữ Liệu
+                    </button>
+                    <button class="demo-btn secondary" onclick="importData()">
+                        📥 Nhập Dữ Liệu
+                    </button>
+                    <button class="demo-btn" onclick="resetToDefault()">
+                        🔄 Reset Về Mặc Định
+                    </button>
+                </div>
+            </div>
+
+            <div class="demo-section">
+                <h3>📱 Test Responsive</h3>
+                <p>Kiểm tra giao diện trên các thiết bị khác nhau:</p>
+                <div class="demo-buttons">
+                    <button class="demo-btn" onclick="simulateMobile()">
+                        📱 Mobile View
+                    </button>
+                    <button class="demo-btn secondary" onclick="simulateTablet()">
+                        📟 Tablet View
+                    </button>
+                    <button class="demo-btn" onclick="resetView()">
+                        💻 Desktop View
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/js/data-storage.js"></script>
+    <script src="static/js/main.js"></script>
+    <script>
+        // Demo functionality
+        function checkDataStatus() {
+            const statusDisplay = document.getElementById('status-display');
+            const menuItems = dataStorage.getMenuItems();
+            const orders = dataStorage.getOrders();
+            
+            let status = '';
+            
+            if (menuItems.length > 0) {
+                status += `<div class="status success">✅ Menu: ${menuItems.length} món ăn</div>`;
+            } else {
+                status += `<div class="status info">⚠️ Menu: Chưa có dữ liệu</div>`;
+            }
+            
+            if (orders.length > 0) {
+                const confirmedOrders = orders.filter(o => o.status === 'confirmed').length;
+                const paidOrders = orders.filter(o => o.status === 'paid').length;
+                status += `<div class="status success">📋 Đơn hàng: ${orders.length} tổng cộng (${confirmedOrders} chờ thanh toán, ${paidOrders} đã thanh toán)</div>`;
+            } else {
+                status += `<div class="status info">📋 Đơn hàng: Chưa có đơn hàng nào</div>`;
+            }
+            
+            statusDisplay.innerHTML = status;
+            updateDataStats();
+        }
+
+        function createSampleOrder() {
+            const sampleItems = [
+                { id: 1, name: "Phở Bò", price: 55000, quantity: 2 },
+                { id: 21, name: "Trà Đá", price: 8000, quantity: 1 }
+            ];
+            
+            const result = dataStorage.createOrder(5, sampleItems);
+            
+            if (result.success) {
+                alert(`✅ Tạo đơn hàng mẫu thành công!\nSố phiếu: ${result.order_number}\nTổng tiền: ${formatCurrency(result.total)}`);
+                checkDataStatus();
+            } else {
+                alert('❌ Có lỗi khi tạo đơn hàng mẫu');
+            }
+        }
+
+        function viewOrders() {
+            const orders = dataStorage.getOrders();
+            
+            if (orders.length === 0) {
+                alert('📋 Chưa có đơn hàng nào');
+                return;
+            }
+            
+            let ordersList = '📋 Danh sách đơn hàng:\n\n';
+            orders.forEach(order => {
+                ordersList += `🆔 ${order.order_number}\n`;
+                ordersList += `🪑 Bàn: ${order.table_number}\n`;
+                ordersList += `💰 Tổng: ${formatCurrency(order.total_amount)}\n`;
+                ordersList += `📊 Trạng thái: ${order.status === 'confirmed' ? 'Chờ thanh toán' : 'Đã thanh toán'}\n`;
+                ordersList += `📅 Thời gian: ${new Date(order.created_at).toLocaleString('vi-VN')}\n\n`;
+            });
+            
+            alert(ordersList);
+        }
+
+        function clearAllData() {
+            if (confirm('⚠️ Bạn có chắc muốn xóa TẤT CẢ dữ liệu?\n\nHành động này không thể hoàn tác!')) {
+                dataStorage.clearAllData();
+                alert('✅ Đã xóa tất cả dữ liệu và khôi phục về mặc định');
+                checkDataStatus();
+            }
+        }
+
+        function updateDataStats() {
+            const statsDiv = document.getElementById('data-stats');
+            const menuItems = dataStorage.getMenuItems();
+            const orders = dataStorage.getOrders();
+            
+            const categories = {};
+            menuItems.forEach(item => {
+                categories[item.category] = (categories[item.category] || 0) + 1;
+            });
+            
+            const totalRevenue = orders
+                .filter(o => o.status === 'paid')
+                .reduce((sum, o) => sum + o.total_amount, 0);
+            
+            let stats = `
+                <div class="status success">
+                    <strong>📊 Thống kê tổng quan:</strong><br>
+                    • Tổng món ăn: ${menuItems.length}<br>
+                    • Tổng đơn hàng: ${orders.length}<br>
+                    • Doanh thu: ${formatCurrency(totalRevenue)}
+                </div>
+            `;
+            
+            if (Object.keys(categories).length > 0) {
+                stats += `<div class="status info"><strong>🍽️ Phân loại món ăn:</strong><br>`;
+                Object.entries(categories).forEach(([category, count]) => {
+                    stats += `• ${category}: ${count} món<br>`;
+                });
+                stats += `</div>`;
+            }
+            
+            statsDiv.innerHTML = stats;
+        }
+
+        function exportData() {
+            const data = dataStorage.exportData();
+            const dataStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `selfrestaurant-backup-${new Date().toISOString().slice(0, 10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('✅ Đã xuất dữ liệu thành công!');
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        dataStorage.importData(data);
+                        alert('✅ Nhập dữ liệu thành công!');
+                        checkDataStatus();
+                    } catch (error) {
+                        alert('❌ File không hợp lệ!');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+
+        function resetToDefault() {
+            if (confirm('🔄 Bạn có chắc muốn reset về cài đặt mặc định?\n\nTất cả dữ liệu hiện tại sẽ bị xóa!')) {
+                dataStorage.clearAllData();
+                alert('✅ Đã reset về cài đặt mặc định');
+                checkDataStatus();
+            }
+        }
+
+        function simulateMobile() {
+            document.body.style.width = '375px';
+            document.body.style.margin = '0 auto';
+            document.body.style.border = '2px solid #ccc';
+        }
+
+        function simulateTablet() {
+            document.body.style.width = '768px';
+            document.body.style.margin = '0 auto';
+            document.body.style.border = '2px solid #ccc';
+        }
+
+        function resetView() {
+            document.body.style.width = '';
+            document.body.style.margin = '';
+            document.body.style.border = '';
+        }
+
+        // Initialize demo page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkDataStatus();
+        });
+    </script>
+</body>
+</html>

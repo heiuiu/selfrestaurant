@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt Món Tại Bàn - Self Restaurant</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <!-- Menu Bar -->
+    <nav class="menu-bar">
+        <div class="menu-content">
+            <a href="index.html" class="logo">
+                🍽️ Self Restaurant
+            </a>
+            <div class="menu-nav">
+                <a href="index.html">Trang Chủ</a>
+                <a href="order.html" class="active">Đặt Món</a>
+                <a href="payment.html">Thanh Toán</a>
+                <a href="demo.html">Demo</a>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Chuyển đổi chế độ sáng/tối">
+                <span id="theme-icon">🌙</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Màn hình 1: Chọn món và số lượng -->
+        <div id="menu-screen" class="card">
+            <h2 style="text-align: center; margin-bottom: 30px; color: var(--text-primary);">
+                🍽️ Chọn Món Ăn
+            </h2>
+
+            <!-- Category Tabs -->
+            <div class="category-tabs">
+                <div class="category-tab active" data-category="all">Tất Cả</div>
+                <div class="category-tab" data-category="Món chính">Món Chính</div>
+                <div class="category-tab" data-category="Món phụ">Món Phụ</div>
+                <div class="category-tab" data-category="Đồ uống">Đồ Uống</div>
+                <div class="category-tab" data-category="Món tráng miệng">Tráng Miệng</div>
+            </div>
+
+            <!-- Menu Grid -->
+            <div class="menu-grid" id="menu-grid">
+                <!-- Menu items will be loaded here -->
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary" id="order-summary" style="display: none;">
+                <h3>📋 Tóm Tắt Đơn Hàng</h3>
+                <div class="order-items" id="order-items">
+                    <!-- Order items will be displayed here -->
+                </div>
+                <div class="order-total" id="order-total">
+                    Tổng: 0 VNĐ
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons" id="menu-actions" style="display: none;">
+                <button class="btn btn-secondary" onclick="clearOrder()">
+                    🗑️ Xóa Tất Cả
+                </button>
+                <button class="btn btn-primary" onclick="showTableInput()">
+                    ➡️ Tiếp Tục
+                </button>
+            </div>
+        </div>
+
+        <!-- Màn hình 2: Nhập số bàn và xác nhận -->
+        <div id="table-screen" class="card hidden">
+            <h2 style="text-align: center; margin-bottom: 30px; color: #2c3e50;">
+                🪑 Nhập Số Bàn
+            </h2>
+
+            <div class="table-input-section">
+                <h3>Số bàn của bạn:</h3>
+                <input type="text" class="table-input" id="table-input" placeholder="0" readonly>
+                
+                <!-- Number Pad -->
+                <div class="number-pad">
+                    <button class="number-btn" onclick="inputNumber('1')">1</button>
+                    <button class="number-btn" onclick="inputNumber('2')">2</button>
+                    <button class="number-btn" onclick="inputNumber('3')">3</button>
+                    <button class="number-btn" onclick="inputNumber('4')">4</button>
+                    <button class="number-btn" onclick="inputNumber('5')">5</button>
+                    <button class="number-btn" onclick="inputNumber('6')">6</button>
+                    <button class="number-btn" onclick="inputNumber('7')">7</button>
+                    <button class="number-btn" onclick="inputNumber('8')">8</button>
+                    <button class="number-btn" onclick="inputNumber('9')">9</button>
+                    <button class="number-btn clear" onclick="clearTableInput()">⌫</button>
+                    <button class="number-btn" onclick="inputNumber('0')">0</button>
+                    <button class="number-btn clear" onclick="clearTableInput()">Xóa</button>
+                </div>
+            </div>
+
+            <!-- Final Order Summary -->
+            <div class="order-summary" id="final-order-summary">
+                <h3>📋 Đơn Hàng Cuối Cùng</h3>
+                <div class="order-items" id="final-order-items">
+                    <!-- Final order items will be displayed here -->
+                </div>
+                <div class="order-total" id="final-order-total">
+                    Tổng: 0 VNĐ
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="showMenuScreen()">
+                    ⬅️ Quay Lại
+                </button>
+                <button class="btn btn-primary" onclick="confirmOrder()" id="confirm-btn">
+                    ✅ Xác Nhận Đặt Món
+                </button>
+            </div>
+        </div>
+
+        <!-- Màn hình 3: Thông báo thành công -->
+        <div id="success-screen" class="card hidden">
+            <div class="success-message">
+                <h2>🎉 Đặt Món Thành Công!</h2>
+                <p>Đơn hàng của bạn đã được gửi đến bếp</p>
+                <p>Số thứ tự phiếu:</p>
+                <div class="order-number" id="order-number-display">
+                    <!-- Order number will be displayed here -->
+                </div>
+                <p>Vui lòng chờ nhân viên phục vụ mang món đến bàn</p>
+                <p>Cảm ơn bạn đã sử dụng dịch vụ!</p>
+                
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="startNewOrder()">
+                        🆕 Đặt Món Mới
+                    </button>
+                    <a href="index.html" class="btn btn-secondary">
+                        🏠 Về Trang Chủ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/js/data-storage.js"></script>
+    <script src="static/js/main.js"></script>
+    <script src="static/js/order.js"></script>
+</body>
+</html>
